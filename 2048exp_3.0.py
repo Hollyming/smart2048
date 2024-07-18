@@ -15,26 +15,6 @@ def get_grid(tiles, directions):
         g.add_random_tile()
     return g.tiles
 
-def printf(tiles):
-    formatted_tiles = []
-    for row in tiles:
-        formatted_row = []
-        for i in row:
-            if i == 0:
-                formatted_row.append(0)
-            else:
-                formatted_row.append(int(np.log2(i)))
-        formatted_tiles.append(formatted_row)
-    
-    for row in formatted_tiles:
-        print("[", end='')
-        for i, val in enumerate(row):
-            if i < len(row) - 1:
-                print(f"{val}, ", end='')
-            else:
-                print(f"{val}", end='')
-        print("]")
-
 def my_log2(z):
     if z == 0:
         return 0
@@ -56,7 +36,6 @@ class Ai:
             for i in range(kn):
                 t_g = get_grid(tiles, directions)
                 fen.append(self.get_score(t_g))
-            print(directions, min(fen))
             score_list.append([directions, min(fen)])
         score_list = sorted(score_list, key=(lambda x: [x[1]]))
         for d in score_list[::-1]:
@@ -69,27 +48,7 @@ class Ai:
     def get_score(self, tiles):
         a = self.get_bj2__4(tiles)
         b = self.get_bj__4(tiles)
-        print(a, b)
         return a * 2.8 + b
-
-    def debug(self, tiles):
-        print('\n=======开始判断========')
-        print('移动前棋盘：')
-        printf(tiles)
-        score_list = []
-        for directions in itertools.product("ULRD", repeat=2):
-            t_g = get_grid(tiles, directions)
-            fen = self.get_score(t_g)
-            score_list.append([directions, fen])
-            print('==={}=={}=='.format(directions, fen))
-            printf(t_g)
-        score_list = sorted(score_list, key=(lambda x: [x[1]]))
-        for d in score_list[::-1]:
-            self.g.tiles = tiles.copy()
-            if self.g.run(d[0][0], is_fake=True) != 0:
-                self.g.run(d[0][0])
-                return d[0][0]
-        return score_list[-1][0][0]
 
     def get_tile_num(self, tiles):
         n = 0
@@ -243,10 +202,10 @@ class Game2048App:
         self.padding = 10
 
         self.tiles = np.array([
-            [1, 0, 2, 3],
-            [0, 0, 2, 5],
-            [0, 1, 4, 3],
-            [6, 8, 6, 10]
+            [0, 0, 0, 1],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0],
+            [0, 0, 0, 0]
         ])
         self.tiles = np.where(self.tiles == 0, 0, 2 ** self.tiles)
         
@@ -313,8 +272,8 @@ class Game2048App:
                 direction = "R"
             
             moved = self.game.run(direction)
-            # if moved:
-                # self.game.grid.add_random_tile()
+            if moved:
+                self.game.grid.add_random_tile()
             self.update_ui()
             
     def show_ai_suggestion(self):

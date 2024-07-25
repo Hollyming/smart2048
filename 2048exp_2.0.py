@@ -243,10 +243,10 @@ class Game2048App:
         self.padding = 10
 
         self.tiles = np.array([
-            [1, 0, 2, 3],
-            [0, 0, 2, 5],
-            [0, 1, 4, 3],
-            [6, 8, 6, 10]
+            [2, 0, 0, 0],
+            [5, 2, 0, 1],
+            [1, 7, 4, 3],
+            [9, 8, 7, 5]
         ])
         self.tiles = np.where(self.tiles == 0, 0, 2 ** self.tiles)
         
